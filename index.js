@@ -19,7 +19,6 @@ var Dropzone = React.createClass({
     getInitialState: function getInitialState() {
         return {
             isDragActive: false,
-            showDropZone: false,
             showDropZone: false
         };
     },
@@ -51,7 +50,6 @@ var Dropzone = React.createClass({
         window.addEventListener('drop', this.onDrop);
         window.addEventListener('paste', this.onPaste);
     },
-
     componentWillUnmount: function componentWillUnmount() {
         window.removeEventListener('dragenter', this.onDragEnter);
         window.removeEventListener('dragleave', this.onDragLeave);
@@ -59,14 +57,11 @@ var Dropzone = React.createClass({
         window.removeEventListener('drop', this.onDrop);
         window.removeEventListener('paste', this.onPaste);
     },
-
     allFilesAccepted: function allFilesAccepted(files) {
-        var _this = this;
+    return files.every(file => accept(file, this.props.accept))
+  },
 
-        return files.every(function (file) {
-            return accept(file, _this.props.accept);
-        });
-    },
+---
 
     onDragEnter: function onDragEnter(event) {
         event.preventDefault();
@@ -74,9 +69,9 @@ var Dropzone = React.createClass({
         // But Chrome implements some drag store, which is accesible via dataTransfer.items
         var dataTransferItems = event.dataTransfer && event.dataTransfer.items ? event.dataTransfer.items : [];
 
-        // Now we need to convert the DataTransferList to Array
-        var itemsArray = Array.prototype.slice.call(dataTransferItems);
-        var allFilesAccepted = this.allFilesAccepted(itemsArray);
+    // Now we need to convert the DataTransferList to Array
+    var itemsArray = Array.prototype.slice.call(dataTransferItems);
+    var allFilesAccepted = this.allFilesAccepted(itemsArray);
 
         this.setState({
             isDragActive: allFilesAccepted,
@@ -147,17 +142,14 @@ var Dropzone = React.createClass({
         var droppedFiles = files ? files : event.dataTransfer ? event.dataTransfer.files : event.target.files;
         var max = this.props.multiple ? droppedFiles.length : 1;
         var files = [];
-
         for (var i = 0; i < max; i++) {
             var file = droppedFiles[i];
             file.preview = URL.createObjectURL(file);
             files.push(file);
         }
-
         if (this.props.onDrop) {
             this.props.onDrop(files, event);
         }
-
         if (this.allFilesAccepted(files)) {
             if (this.props.onDropAccepted) {
                 this.props.onDropAccepted(files, event);
@@ -168,21 +160,17 @@ var Dropzone = React.createClass({
             }
         }
     },
-
     onClick: function onClick() {
         if (!this.props.disableClick) {
             this.open();
         }
     },
-
     open: function open() {
         var fileInput = React.findDOMNode(this.refs.fileInput);
         fileInput.value = null;
         fileInput.click();
     },
-
     render: function render() {
-
         if (!this.state.showDropZone) {
             return React.createElement('input', {
                     type: 'file',
@@ -242,26 +230,29 @@ var Dropzone = React.createClass({
             appliedStyle = _extends({}, style);
         };
 
-        return React.createElement(
-            'div',
-            {
-                className: className,
-                style: appliedStyle,
-                onClick: this.onClick,
-                onDragEnter: this.onDragEnter,
-                onDragOver: this.onDragOver,
-                onDragLeave: this.onDragLeave,
-                onDrop: this.onDrop },
-            this.props.children,
-            React.createElement('input', {
-                type: 'file',
-                ref: 'fileInput',
-                style: { display: 'none' },
-                multiple: this.props.multiple,
-                accept: this.props.accept,
-                onChange: this.onDrop })
-        );
-    }
+    return (
+      <div
+        className={className}
+        style={appliedStyle}
+        onClick={this.onClick}
+        onDragEnter={this.onDragEnter}
+        onDragOver={this.onDragOver}
+        onDragLeave={this.onDragLeave}
+        onDrop={this.onDrop}
+      >
+        {this.props.children}
+        <input
+          type='file'
+          ref='fileInput'
+          style={{ display: 'none' }}
+          multiple={this.props.multiple}
+          accept={this.props.accept}
+          onChange={this.onDrop}
+        />
+      </div>
+    );
+  }
+
 });
 
 module.exports = Dropzone;
