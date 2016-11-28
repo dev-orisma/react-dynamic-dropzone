@@ -1,13 +1,13 @@
 'use strict';
 
-let _extends = Object.assign || function (target) { for (let i = 1; i < arguments.length; i++) { let source = arguments[i]; for (let key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-let React = require('react');
-let accept = require('attr-accept');
-let ReactDOM = require('react-dom');
-let DataTransfer = require('fbjs/lib/DataTransfer');
+var React = require('react');
+var accept = require('attr-accept');
+var ReactDOM = require('react-dom');
+var DataTransfer = require('fbjs/lib/DataTransfer');
 
-let Dropzone = React.createClass({
+var Dropzone = React.createClass({
   displayName: 'Dropzone',
 
   getDefaultProps: function getDefaultProps() {
@@ -67,11 +67,11 @@ let Dropzone = React.createClass({
     event.preventDefault();
         // This is tricky. During the drag even the dataTransfer.files is null
         // But Chrome implements some drag store, which is accesible via dataTransfer.items
-    let dataTransferItems = event.dataTransfer && event.dataTransfer.items ? event.dataTransfer.items : [];
+    var dataTransferItems = event.dataTransfer && event.dataTransfer.items ? event.dataTransfer.items : [];
 
     // Now we need to convert the DataTransferList to Array
-    let itemsArray = Array.prototype.slice.call(dataTransferItems);
-    let allFilesAccepted = this.allFilesAccepted(itemsArray);
+    var itemsArray = Array.prototype.slice.call(dataTransferItems);
+    var allFilesAccepted = this.allFilesAccepted(itemsArray);
 
     this.setState({
       isDragActive: allFilesAccepted,
@@ -114,16 +114,16 @@ let Dropzone = React.createClass({
     if (!this.props.disablePaste) {
       this.setState({ showDropZone: true });
 
-      let items = (event.clipboardData || event.originalEvent.clipboardData).items;
-      let files = [];
-      for (let index in items) {
-        let item = items[index];
+      var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+      var files = [];
+      for (var index in items) {
+        var item = items[index];
         if (item.kind === 'file') {
-          let blob = item.getAsFile();
+          var blob = item.getAsFile();
           blob.lastModifiedDate = new Date();
           blob.name = 'image-' + new Date() + '.jpg';
                     // blob.type = "image/jpeg";
-          let file = new File([blob], blob.name, { type: blob.type, lastModified: blob.lastModifiedDate });
+          var file = new File([blob], blob.name, { type: blob.type, lastModified: blob.lastModifiedDate });
           files.push(file);
         }
       }
@@ -140,11 +140,11 @@ let Dropzone = React.createClass({
       showDropZone: false
     });
 
-    let droppedFiles = files ? files : event.dataTransfer ? event.dataTransfer.files : event.target.files;
-    let max = this.props.multiple ? droppedFiles.length : 1;
-    let files = [];
-    for (let i = 0; i < max; i++) {
-      let file = droppedFiles[i];
+    var droppedFiles = files ? files : event.dataTransfer ? event.dataTransfer.files : event.target.files;
+    var max = this.props.multiple ? droppedFiles.length : 1;
+    var files = [];
+    for (var i = 0; i < max; i++) {
+      var file = droppedFiles[i];
       file.preview = URL.createObjectURL(file);
       files.push(file);
     }
@@ -167,7 +167,7 @@ let Dropzone = React.createClass({
     }
   },
   open: function open() {
-    let fileInput = ReactDOM.findDOMNode(this.refs.fileInput);
+    var fileInput = ReactDOM.findDOMNode(this.refs.fileInput);
     fileInput.value = null;
     fileInput.click();
   },
@@ -182,7 +182,7 @@ let Dropzone = React.createClass({
         onChange: this.onDrop });
     }
 
-    let className;
+    var className;
     if (this.props.className) {
       className = this.props.className;
       if (this.state.isDragActive) {
@@ -193,7 +193,7 @@ let Dropzone = React.createClass({
       }
     }
 
-    let style, activeStyle;
+    var style, activeStyle;
     if (this.props.style || this.props.activeStyle) {
       if (this.props.style) {
         style = this.props.style;
@@ -224,7 +224,7 @@ let Dropzone = React.createClass({
       };
     }
 
-    let appliedStyle;
+    var appliedStyle;
     if (activeStyle && this.state.isDragActive) {
       appliedStyle = _extends({}, style, activeStyle);
     } else {
