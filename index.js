@@ -4,6 +4,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var React = require('react');
 var accept = require('attr-accept');
+var ReactDOM = require('react-dom');
+var DataTransfer = require('fbjs/lib/DataTransfer');
 
 var Dropzone = React.createClass({
     displayName: 'Dropzone',
@@ -61,8 +63,6 @@ var Dropzone = React.createClass({
     return files.every(file => accept(file, this.props.accept))
   },
 
----
-
     onDragEnter: function onDragEnter(event) {
         event.preventDefault();
         // This is tricky. During the drag even the dataTransfer.files is null
@@ -113,16 +113,17 @@ var Dropzone = React.createClass({
     onPaste: function onPaste(event) {
         if (!this.props.disablePaste) {
             this.setState({ showDropZone: true });
+
             var items = (event.clipboardData || event.originalEvent.clipboardData).items;
             var files = [];
-            for (index in items) {
+            for (var index in items) {
                 var item = items[index];
                 if (item.kind === 'file') {
                     var blob = item.getAsFile();
                     blob.lastModifiedDate = new Date();
                     blob.name = "image-" + new Date() + ".jpg";
-                    blob.type = "image/jpeg";
-                    var file = new File([blob], blob.name);
+                    // blob.type = "image/jpeg";
+                    var file = new File([blob], blob.name,{type: blob.type, lastModified: blob.lastModifiedDate});
                     files.push(file);
                 }
             }
@@ -166,7 +167,7 @@ var Dropzone = React.createClass({
         }
     },
     open: function open() {
-        var fileInput = React.findDOMNode(this.refs.fileInput);
+        var fileInput = ReactDOM.findDOMNode(this.refs.fileInput);
         fileInput.value = null;
         fileInput.click();
     },
@@ -230,27 +231,25 @@ var Dropzone = React.createClass({
             appliedStyle = _extends({}, style);
         };
 
-    return (
-      <div
-        className={className}
-        style={appliedStyle}
-        onClick={this.onClick}
-        onDragEnter={this.onDragEnter}
-        onDragOver={this.onDragOver}
-        onDragLeave={this.onDragLeave}
-        onDrop={this.onDrop}
-      >
-        {this.props.children}
-        <input
-          type='file'
-          ref='fileInput'
-          style={{ display: 'none' }}
-          multiple={this.props.multiple}
-          accept={this.props.accept}
-          onChange={this.onDrop}
-        />
-      </div>
-    );
+    return React.createElement(
+            'div',
+            {
+                className: className,
+                style: appliedStyle,
+                onClick: this.onClick,
+                onDragEnter: this.onDragEnter,
+                onDragOver: this.onDragOver,
+                onDragLeave: this.onDragLeave,
+                onDrop: this.onDrop },
+            this.props.children,
+            React.createElement('input', {
+                type: 'file',
+                ref: 'fileInput',
+                style: { display: 'none' },
+                multiple: this.props.multiple,
+                accept: this.props.accept,
+                onChange: this.onDrop })
+        );
   }
 
 });
