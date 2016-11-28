@@ -239,8 +239,7 @@ var Dropzone = React.createClass({
         onClick: this.onClick,
         onDragEnter: this.onDragEnter,
         onDragOver: this.onDragOver,
-        onDragLeave: this.onDragLeave,
-        onDrop: this.onDrop },
+        onDragLeave: this.onDragLeave},
             this.props.children,
             React.createElement('input', {
               type: 'file',
