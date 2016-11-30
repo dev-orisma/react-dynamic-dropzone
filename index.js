@@ -120,11 +120,15 @@ var Dropzone = React.createClass({
         var item = items[index];
         if (item.kind === 'file') {
           var blob = item.getAsFile();
-          blob.lastModifiedDate = new Date();
-          blob.name = 'image-' + new Date() + '.jpg';
-                    // blob.type = "image/jpeg";
-          var file = new File([blob], blob.name, { type: blob.type, lastModified: blob.lastModifiedDate });
-          files.push(file);
+          if(blob){
+	          blob.lastModifiedDate = new Date();
+	          blob.name = 'image-' + new Date() + '.jpg';
+	                    // blob.type = "image/jpeg";
+	          var file = new File([blob], blob.name, { type: blob.type, lastModified: blob.lastModifiedDate });
+	          files.push(file);
+          }else{
+          	alert("Paste support only jpg,png,gif");
+          }
         }
       }
       if (files.length) {
