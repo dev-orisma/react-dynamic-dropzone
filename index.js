@@ -112,7 +112,7 @@ var Dropzone = React.createClass({
 
   onPaste: function onPaste(event) {
     if (!this.props.disablePaste) {
-      this.setState({ showDropZone: true });
+      // this.setState({ showDropZone: true });
 
       var items = (event.clipboardData || event.originalEvent.clipboardData).items;
       var files = [];
